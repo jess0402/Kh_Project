@@ -5,6 +5,8 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
+
 import movie.booking.program.vo.Movie;
 
 /**
@@ -13,6 +15,9 @@ import movie.booking.program.vo.Movie;
  */
 public class MovieManager {
 	private Scanner sc = new Scanner(System.in);
+//	JFrame jFrame = new JFrame();
+	
+	private String str = "";
 	
 	private List<Movie> yongSan = new ArrayList<>();
 	private List<Movie> hongDae = new ArrayList<>();
@@ -85,7 +90,7 @@ public class MovieManager {
 			switch(choiceMovie) {
 
 			case "1" :
-				System.out.println("----- 극장 선택 -----");
+				System.out.println("\n============== 📽 영화 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i < yongSan.size(); i++) {
 					if(yongSan.get(i).getMovieName().equals("더 배트맨")) {
@@ -105,7 +110,7 @@ public class MovieManager {
 				break outer;
 
 			case "2" :
-				System.out.println("----- 극장 선택 -----");
+				System.out.println("\n============== 📽 극장 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i< yongSan.size(); i++) {
 					if(yongSan.get(i).getMovieName().equals("나이트메어 앨리")) {
@@ -125,7 +130,7 @@ public class MovieManager {
 				break outer;
 
 			case "3" :
-				System.out.println("----- 극장 선택 -----");
+				System.out.println("\n============== 📽 극장 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i< yongSan.size(); i++) {
 					if(yongSan.get(i).getMovieName().equals("나이트 레이더스")) {
@@ -145,6 +150,7 @@ public class MovieManager {
 				break outer;
 
 			case "4" :
+				System.out.println("\n============== 📽 극장 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i< yongSan.size(); i++) {
 					if(yongSan.get(i).getMovieName().equals("안터벨룸")) {
@@ -179,7 +185,7 @@ public class MovieManager {
 		 
 		while(true)
 		try {
-			System.out.print(">> 극장을 선택해주세요 : ");
+			System.out.print("➜ 극장 선택 : ");
 			lastTheaterChoice = sc.next();			
 			if(Integer.parseInt(lastTheaterChoice) > 0 && Integer.parseInt(lastTheaterChoice) <= temp.size())
 				break;
@@ -220,7 +226,7 @@ public class MovieManager {
 			switch(choiceTheater) {
 			//용산
 			case "1" : 
-				System.out.println("---- 영화선택 ----");
+				System.out.println("\n============== 📽 영화 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i < yongSan.size(); i++) {
 					System.out.println(j++ + ". " +yongSan.get(i));
@@ -230,7 +236,7 @@ public class MovieManager {
 
 				//홍대
 			case "2" : 
-				System.out.println("---- 영화선택 ----");
+				System.out.println("\n============== 📽 영화 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i < hongDae.size(); i++) {
 					System.out.println(j++ + ". " +hongDae.get(i));
@@ -240,7 +246,7 @@ public class MovieManager {
 
 				//강남
 			case "3" :
-				System.out.println("---- 영화선택 ----");
+				System.out.println("\n============== 📽 영화 선택 ===============\n\n");
 				j = 1;
 				for(int i = 0; i < gangNam.size(); i++) {
 					System.out.println(j++ + ". " +gangNam.get(i));
@@ -265,7 +271,7 @@ public class MovieManager {
 		
 		while(true) {
 			try {
-				System.out.print(">> 영화를 선택해주세요 : ");
+				System.out.print("➜ 영화 선택 : ");
 				lastMovieChoice = sc.next();
 				
 				if(Integer.parseInt(lastMovieChoice) > 0 && Integer.parseInt(lastMovieChoice) <= temp.size())
@@ -301,12 +307,18 @@ public class MovieManager {
 	// main 2, 3번 출력용
 	public void nowBookingPrint() {
 		
-		System.out.println("********예매 내역*********");
-        for(int i = 0; i < completeMovieList.size(); i++) {
-            System.out.println(i+1 + ". " + completeMovieList.get(i));
-            System.out.println("좌석 : " + selectSeat.get(i));
-        }
+		for(int i = 0; i < completeMovieList.size(); i++) {		
+			String temp = (i+1 + ". " + completeMovieList.get(i) 
+			+ "\n좌석: " + selectSeat.get(i) + "\n");
+			
+			if(str.contains(temp))
+				continue;
+			else
+				str += temp;
+		}
 		
+		
+        JOptionPane.showMessageDialog(null, str, "현재 예매 내역", JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	public void takenSeat(String selectedSeat) {
@@ -333,7 +345,9 @@ public class MovieManager {
 			switch(choiceMyBooking) {
 			case "1":
 				if(completeMovieList.isEmpty()) {
-					System.out.println("예매 내역이 없습니다.");
+					JOptionPane.showMessageDialog(null, "예매 내역이 없습니다.",
+												  "예매 내역 확인",
+							                      JOptionPane.WARNING_MESSAGE);
 					break outer;
 				}
 				else{
@@ -341,8 +355,10 @@ public class MovieManager {
 				}
 				return true;
 			case "2":
-				if(completeMovieList.isEmpty()) {
-					System.out.println("예매 내역이 없습니다.");
+				if(completeMovieList.isEmpty()) {					
+					JOptionPane.showMessageDialog(null, "예매 내역이 없습니다.",
+												  "예매 내역 확인",
+												  JOptionPane.WARNING_MESSAGE);
 					break outer;
 				}
 				else{
