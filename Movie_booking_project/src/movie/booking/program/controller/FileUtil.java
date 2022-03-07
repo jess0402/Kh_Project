@@ -10,10 +10,60 @@ import java.io.OutputStream;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import movie.booking.program.vo.Member;
+import movie.booking.program.vo.Movie;
 
 public class FileUtil {
+	
+	/**
+     * 영화 내역 저장 List
+     */
+    public static void writeMovieFile(String dir, String name, Map<String, Movie> movieMap, String key) throws IOException{
+        OutputStream os = null;
+        try {
+            File file = new File(dir);
+            
+            //저장할 디렉토리가 존재하지 않으면 생성
+            if(!file.exists()) {
+                file.mkdir();
+            }
+            
+            File outFile = new File(dir,name);
+            
+            //파일이 존재한다면 삭제
+            if(outFile.exists()) {
+                outFile.delete();
+            }
+            
+            //파일에 String값 입력
+            os = new BufferedOutputStream(new FileOutputStream(outFile));
+            
+            String writeString = 
+                    movieMap.keySet() + ","
+                    + movieMap.get(key).getMovieName() + ","
+                    + movieMap.get(key).getMovieTime() + ","
+                    + movieMap.get(key).getTheater() + ","
+                    + movieMap.get(key).getRoom() + ","
+                    + movieMap.get(key).getAgeLimit() + "\n";
+            for(int i = 0; i < movieMap.size(); i++) {
+                //저장한 string -> byte배열
+                byte[] byteArr = writeString.getBytes();
+                
+                os.write(byteArr);
+            }
+        } catch(IOException e) {
+            e.printStackTrace();
+            throw e;
+        } finally {
+            try {
+                if(os != null) os.close();
+            } catch(Exception e) {
+            }
+        }
+    }
+    
 	
 	/**
 	 * 회원정보 저장 파일
@@ -32,6 +82,8 @@ public class FileUtil {
 		}
 		return memberList;
 	}
+	
+
 
 	/**
 	 * 회원정보 저장 List 
@@ -108,5 +160,14 @@ public class FileUtil {
 		}
 		
 	}
+	
+//	public static List<Movie> readMovieFile(File file)throws IOException{
+//		FileReader fr = null;
+//		List<Movie> movieList = new ArrayList<>();
+//		
+//		
+//	}
+	
+
 
 }

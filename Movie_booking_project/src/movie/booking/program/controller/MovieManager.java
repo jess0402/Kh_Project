@@ -1,12 +1,20 @@
 package movie.booking.program.controller;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.InputMismatchException;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.swing.JOptionPane;
 
+import movie.booking.program.vo.Member;
 import movie.booking.program.vo.Movie;
 
 /**
@@ -15,8 +23,11 @@ import movie.booking.program.vo.Movie;
  */
 public class MovieManager {
 	private Scanner sc = new Scanner(System.in);
-//	JFrame jFrame = new JFrame();
 	
+	Map<String, Movie> map = new HashMap<>();
+    List<Member> nowId = new ArrayList<>();
+    List<Movie> tempMovie = new ArrayList<>();
+    
 	private String str = "";
 	
 	private List<Movie> yongSan = new ArrayList<>();
@@ -28,6 +39,9 @@ public class MovieManager {
 	List<Movie> completeMovieList = new ArrayList<>(); 
     int movieIndex = 0;
     int seatIndex = 0;
+    
+    String filePath = "/C:/Users/jes/Desktop/UserInfo/";
+    String fileName = "membersInfo.txt";
 	
 	public MovieManager() {
 		yongSan.add(new Movie("더 배트맨", "용산점", 13, 15, "10:35"));
@@ -183,7 +197,7 @@ public class MovieManager {
 		
 		String lastTheaterChoice;
 		 
-		while(true)
+		while(true) {
 		try {
 			System.out.print("➜ 극장 선택 : ");
 			lastTheaterChoice = sc.next();			
@@ -195,6 +209,7 @@ public class MovieManager {
 			System.err.println("숫자만 입력해주세요.");
 			continue;
 		}
+	}
 		
 		switch(lastTheaterChoice) {
 		case "1" :
@@ -305,20 +320,45 @@ public class MovieManager {
 	}
 	
 	// main 2, 3번 출력용
-	public void nowBookingPrint() {
+	public void nowBookingPrint(int memberNo) {
+		String name = "";
+		String pastList = "";
+		BufferedReader br = null;
 		
-		for(int i = 0; i < completeMovieList.size(); i++) {		
-			String temp = (i+1 + ". " + completeMovieList.get(i) 
-			+ "\n좌석: " + selectSeat.get(i) + "\n");
-			
-			if(str.contains(temp))
-				continue;
-			else
-				str += temp;
+		// 기존 파일 있는지 확인
+		try {
+			nowId = FileUtil.readFile(new File(filePath, fileName));
+		} catch (IOException e1) {
+			e1.printStackTrace();
 		}
 		
 		
-        JOptionPane.showMessageDialog(null, str, "현재 예매 내역", JOptionPane.INFORMATION_MESSAGE);
+		for(int i = 0; i < nowId.size(); i++) {
+			if(nowId.get(i).getMemberNo() == memberNo) {
+				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
+				break;
+			}
+		}
+		
+		File inFile = new File(name);
+		
+		try {
+			br = new BufferedReader(new FileReader(inFile));
+			String data = null;
+			while((data = br.readLine()) != null) {
+				pastList += (data + "\n");
+			} 
+			JOptionPane.showMessageDialog(null, pastList, "현재 예매 내역", JOptionPane.INFORMATION_MESSAGE);
+		} catch(IOException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}		
+		}
+			
 	}
 
 	public void takenSeat(String selectedSeat) {
@@ -339,30 +379,223 @@ public class MovieManager {
 	/**
 	 * main 4. 나의 예매내역
 	 */
-	public boolean myBooking(String choiceMyBooking) {
+//	public boolean myBooking(String choiceMyBooking) {
+//		outer:
+//		while(true) {
+//			switch(choiceMyBooking) {
+//			case "1":
+//				if(completeMovieList.isEmpty()) {
+//					JOptionPane.showMessageDialog(null, "예매 내역이 없습니다.",
+//												  "예매 내역 확인",
+//							                      JOptionPane.WARNING_MESSAGE);
+//					break outer;
+//				}
+//				else{
+//					nowBookingPrint();
+//				}
+//				return true;
+//			case "2":
+//				if(completeMovieList.isEmpty()) {					
+//					JOptionPane.showMessageDialog(null, "예매 내역이 없습니다.",
+//												  "예매 내역 확인",
+//												  JOptionPane.WARNING_MESSAGE);
+//					break outer;
+//				}
+//				else{
+//					nowBookingPrint();
+//					//삭제할 내역을 선택하세요
+//					System.out.println("--------------------");					
+//					int choiceRemove = 0;
+//					String tempchoiceRemove;
+//					
+//					while(true) {
+//						try {
+//							System.out.print(">> 삭제할 내역을 선택하세요 : ");
+//							tempchoiceRemove = sc.next();
+//							
+//							if(Integer.parseInt(tempchoiceRemove) > 0 &&
+//									Integer.parseInt(tempchoiceRemove) <= completeMovieList.size()) {
+//								choiceRemove = Integer.parseInt(tempchoiceRemove);
+//								break;
+//							}
+//							else
+//								System.err.println("선택지에 있는 값을 입력해주세요.");
+//						} catch(NumberFormatException e) {
+//							System.err.println("숫자만 입력해주세요.");
+//							continue;
+//						}
+//					}
+//
+//					//삭제진행
+//					Movie deleteMovie = completeMovieList.get(choiceRemove-1);
+//                    char rowSeat = selectSeat.get(choiceRemove-1).charAt(0);
+//                    int colSeat = Character.getNumericValue(selectSeat.get(choiceRemove-1).charAt(1));
+//                    deleteMovie.getSeats()[rowSeat - 65][colSeat - 1] = "︎☐ ";
+//					completeMovieList.remove(choiceRemove - 1);
+//					selectSeat.remove(choiceRemove-1);
+//					movieIndex--;
+//					System.out.println(choiceRemove + "번 취소가 완료되었습니다!");
+//					
+//				}
+//				return false;
+//			case "0": return true;
+//			default : System.err.println("잘못 입력하셨습니다. 메인메뉴로 돌아갑니다."); return true;
+//			}
+//		}
+//		return true;
+//	}
+	
+	
+	public void movieFile(int memberNo) {
+		BufferedReader br = null;
+		BufferedWriter bw = null;	
+
+		String name = "";
+		String pastList = "";
+		
+		// 기존 파일 있는지 확인
+		try {
+			nowId = FileUtil.readFile(new File(filePath, fileName));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+		
+		for(int i = 0; i < nowId.size(); i++) {
+			if(nowId.get(i).getMemberNo() == memberNo) {
+				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
+				break;
+			}
+		}
+		
+		File f = new File(name);
+		
+		if(f.exists()) {
+			try {
+				File inFile = new File(name);
+				br = new BufferedReader(new FileReader(inFile));
+				String data = null;
+				while((data = br.readLine()) != null) {
+					pastList += (data + "\n");
+				}
+				
+				File outFile = new File(name);
+				bw = new BufferedWriter(new FileWriter(outFile));
+				bw.write(pastList);
+				
+				String nowList = "";
+				for(int i = 0; i < completeMovieList.size(); i++) {		
+					String temp = (i+1 + ". " + completeMovieList.get(i) 
+					+ "\n좌석: " + selectSeat.get(i) + "\n");
+					
+					if(nowList.contains(temp))
+						continue;
+					else
+						nowList += temp;
+				}
+				
+				bw.write(nowList);
+				
+			} catch (IOException e) {
+		          e.printStackTrace();
+			} finally {
+				try {
+					bw.close();
+					br.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		else {
+			
+			try {
+				File outFile = new File(name);
+				bw = new BufferedWriter(new FileWriter(outFile));
+				bw.write(pastList);
+				
+				String nowList = "";
+				for(int i = 0; i < completeMovieList.size(); i++) {		
+					String temp = (i+1 + ". " + completeMovieList.get(i) 
+					+ "\n좌석: " + selectSeat.get(i) + "\n");
+					
+					if(nowList.contains(temp))
+						continue;
+					else
+						nowList += temp;
+				}
+				System.out.println(nowList);
+				bw.write(nowList);
+			} catch (IOException e) {
+		          e.printStackTrace();
+			} finally {
+				try {
+					bw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+	}
+	
+	/**
+	 * main 4. 나의 예매내역
+	 */
+	public boolean myBooking(String choiceMyBooking, int memberNo) {
+		BufferedReader br = null;
+		BufferedWriter bw = null;	
+		FileReader fr = null;
+		FileWriter fw = null;
+		
+		int index = 0;
+		String name = "";
+		String pastList = "";
+		
+		// 예매 내역 불러오기
+		try {
+			nowId = FileUtil.readFile(new File(filePath, fileName));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		} 
+
+		for(int i = 0; i < nowId.size(); i++) {
+			if(nowId.get(i).getMemberNo() == memberNo) {
+				index = i;
+				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
+				break;
+			}
+		}
+		
+		File f = new File(name);
+		
 		outer:
 		while(true) {
 			switch(choiceMyBooking) {
 			case "1":
-				if(completeMovieList.isEmpty()) {
+				if(f.exists()) {
+					nowBookingPrint(memberNo);
+				}
+				else {
 					JOptionPane.showMessageDialog(null, "예매 내역이 없습니다.",
-												  "예매 내역 확인",
-							                      JOptionPane.WARNING_MESSAGE);
+					"예매 내역 확인", JOptionPane.WARNING_MESSAGE);
 					break outer;
 				}
-				else{
-					nowBookingPrint();
-				}
-				return true;
+				
+				return true; 
+				
 			case "2":
-				if(completeMovieList.isEmpty()) {					
+				if(!(f.exists())) {					
 					JOptionPane.showMessageDialog(null, "예매 내역이 없습니다.",
 												  "예매 내역 확인",
 												  JOptionPane.WARNING_MESSAGE);
 					break outer;
 				}
+				
 				else{
-					nowBookingPrint();
+					
+					nowBookingPrint(memberNo);
+				
 					//삭제할 내역을 선택하세요
 					System.out.println("--------------------");					
 					int choiceRemove = 0;
@@ -372,6 +605,7 @@ public class MovieManager {
 						try {
 							System.out.print(">> 삭제할 내역을 선택하세요 : ");
 							tempchoiceRemove = sc.next();
+							
 							
 							if(Integer.parseInt(tempchoiceRemove) > 0 &&
 									Integer.parseInt(tempchoiceRemove) <= completeMovieList.size()) {
@@ -385,8 +619,7 @@ public class MovieManager {
 							continue;
 						}
 					}
-					
-				
+
 					//삭제진행
 					Movie deleteMovie = completeMovieList.get(choiceRemove-1);
                     char rowSeat = selectSeat.get(choiceRemove-1).charAt(0);
@@ -406,5 +639,6 @@ public class MovieManager {
 		return true;
 	}
 	
+
 	
 }

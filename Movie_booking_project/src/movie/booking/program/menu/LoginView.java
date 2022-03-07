@@ -21,6 +21,7 @@ public class LoginView {
 	
 	List<Member> loginCheck = new ArrayList<>();
 	Member deleteCheck = new Member();
+	File file = new File(filePath, fileName);
 			
     String mainString = "\n============ 🖥 Login Menu 🖥  ============\n\n"
     				  + "\t1. 로그인\n"
@@ -39,27 +40,25 @@ public class LoginView {
 			switch(choice) {
 			//login
 			case "1" :
-				System.out.println("---로그인---");
-				System.out.print("ID : ");
-				String inputId = sc.next();
-				System.out.print("Password : ");
-				String inputPw = sc.next();
-				try {
-					loginCheck = FileUtil.readFile(new File(filePath, fileName)); 
-					for(int i = 0; i < loginCheck.size(); i++) {
-						if(inputId.equals(loginCheck.get(i).getId()) &&
-								inputPw.equals(loginCheck.get(i).getPassword())){
-							System.out.println("로그인 성공");
-							//영화 예매창으로
-							return 1;
-						} else {
-							System.out.println("아이디, 비밀번호를 체크하시오");
-							return 2;
-						}
-					}
-				} catch (IOException e1) {
-					e1.printStackTrace();
-				}
+                System.out.println("\n================== 로그인 ==================");
+                System.out.print("\t➜ ID : ");
+                String inputId = sc.next();
+                System.out.print("\t➜ Password : ");
+                String inputPw = sc.next();
+                try {
+                    loginCheck = FileUtil.readFile(file); 
+                    for(int i = 0; i < loginCheck.size(); i++) {
+                        if(inputId.equals(loginCheck.get(i).getId()) &&
+                                inputPw.equals(loginCheck.get(i).getPassword())){
+                            System.out.println("\t🎶 로그인 성공 🎶");
+                            return loginCheck.get(i).getMemberNo();
+                        }
+                    }
+                    System.err.println("\t❗아이디, 비밀번호를 체크하세요❗");
+                    return -1;
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
 
 
 			//add
@@ -99,29 +98,31 @@ public class LoginView {
 				break;
 				
 	            //등록된 계정 조회
-	            case "4" :
-	                System.out.println("\n============= 등록된 회원 조회 =============");
-	                System.out.print("\t➜ ID를 입력해주세요 : ");
-	                String searchId = sc.next();
-	                try {
-	                    loginCheck = FileUtil.readFile(new File(filePath, fileName));
-	                    if(loginCheck.isEmpty()) {
-	                    }
-	                    else{
-	                        for(int i = 0; i < loginCheck.size(); i++) {
-	                            if(searchId.equals(loginCheck.get(i).getId())){
-	                                System.out.println("\n\t" + searchId + "님은 등록된 회원입니다.");
-	                                break;
-	                            } else {
-	                                System.out.println("\t등록되지 않은 회원입니다.");
-	                                break;
-	                            }
-	                        }
-	                    }
-	                } catch (IOException e1) {
-	                    e1.printStackTrace();
-	                }
-	                break;
+            case "4" :
+                System.out.println("\n============= 등록된 회원 조회 =============");
+                System.out.print("\t➜ ID를 입력해주세요 : ");
+                String searchId = sc.next();
+                int cnt = 0;
+                try {
+                    loginCheck = FileUtil.readFile(new File(filePath, fileName));
+                    if(loginCheck.isEmpty()) {
+                        System.out.println("\t등록되지 않은 회원입니다.");
+                    } else{
+                        for(int i = 0; i < loginCheck.size(); i++) {
+                            if(searchId.equals(loginCheck.get(i).getId())){
+                                System.out.println("\n\t" + searchId + "님은 등록된 회원입니다.");
+                                cnt++;
+                                break;
+                            }
+                        }
+                        if(cnt==0) {
+                        	System.out.println("\t등록되지 않은 회원입니다.");                        	
+                        }
+                    }
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+                break;
 				
 			case "9" : return 0;
 			default : System.err.println("❗️️선택지에 있는 번호만 입력해주세요❗️"); continue;

@@ -42,7 +42,7 @@ public class View {
    
 
    
-   public void mainMenu() {
+   public void mainMenu(int memberNum) {
       
       while(true) {
          System.out.print(mainString);
@@ -62,7 +62,8 @@ public class View {
             }
 
             if(checking()) {
-               manager.nowBookingPrint();   
+               manager.movieFile(memberNum);
+               manager.nowBookingPrint(memberNum);   
             } else {
                manager.deleteBooking(realIndex);
                selectedMovie.getSeats()[rowChoice - 65][columnChoice - 1] = "︎☐ ";
@@ -79,7 +80,8 @@ public class View {
             }
 
             if(checking()) {
-               manager.nowBookingPrint();
+               manager.movieFile(memberNum);
+               manager.nowBookingPrint(memberNum);
             } else {
                manager.deleteBooking(realIndex);
                selectedMovie.getSeats()[rowChoice - 65][columnChoice - 1] = "︎☐ ";
@@ -87,7 +89,7 @@ public class View {
             break;
 
          case "4" : 
-            if(manager.myBooking(myBookingMenu())) {
+            if(manager.myBooking(myBookingMenu(), memberNum)) {
                break;
             }
             //삭제했을 때 realIndex--; 되어야 함!!

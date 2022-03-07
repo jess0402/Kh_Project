@@ -8,7 +8,7 @@ import movie.booking.program.vo.Member;
 
 public class LoginManager {
     
-    private List<Member> members = new ArrayList<>();
+    public List<Member> members = new ArrayList<>();
     
 	String filePath = "/C:/Users/jes/Desktop/UserInfo/";
 	String fileName = "membersInfo.txt";
