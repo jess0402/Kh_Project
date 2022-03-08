@@ -11,6 +11,9 @@ import movie.booking.program.controller.LoginManager;
 import movie.booking.program.vo.Member;
 
 public class LoginView {
+	public static final String ANSI_GREEN = "\u001B[32m";
+	public static final String ANSI_RESET = "\u001B[0m";   
+
 	
 	Scanner sc = new Scanner(System.in);
 	
@@ -23,13 +26,13 @@ public class LoginView {
 	Member deleteCheck = new Member();
 	File file = new File(filePath, fileName);
 			
-    String mainString = "\n============ 🖥 Login Menu 🖥  ============\n\n"
-    				  + "\t1. 로그인\n"
-    				  + "\t2. 계정 등록\n"
-    				  + "\t3. 계정 삭제\n"
-    				  + "\t4. 등록된 계정 조회\n"
-    				  + "\t9. 종료\n"
-    				  + "--------------------------------------------\n"
+    String mainString = "\n=========🖥 Login Menu 🖥===========\n"
+    				  + "\t   1. 로그인\n"
+    				  + "\t   2. 계정 등록\n"
+    				  + "\t   3. 계정 삭제\n"
+    				  + "\t   4. 등록된 계정 조회\n"
+    				  + "\t   9. 종료\n"
+    				  + "====================================\n"
     				  + "\t➜ 메뉴 선택 : ";
     
 	public int mainMenu() {
@@ -37,14 +40,16 @@ public class LoginView {
 			System.out.print(mainString);
 			String choice = sc.next();
 			
+			outer:
 			switch(choice) {
 			//login
 			case "1" :
-                System.out.println("\n================== 로그인 ==================");
-                System.out.print("\t➜ ID : ");
+				System.out.println("\n----------------로그인---------------");
+                System.out.print("\t➜ 아이디 : ");
                 String inputId = sc.next();
-                System.out.print("\t➜ Password : ");
+                System.out.print("\t➜ 비밀번호 : ");
                 String inputPw = sc.next();
+				
                 try {
                     loginCheck = FileUtil.readFile(file); 
                     for(int i = 0; i < loginCheck.size(); i++) {
@@ -63,7 +68,7 @@ public class LoginView {
 
 			//add
 			case "2" :
-				System.out.println("---회원 등록---");
+				System.out.println("\n--------------회원 등록---------------");
 				lm.addMember(inputInfo());
 				try {
 					FileUtil.writeFile(filePath, fileName, lm.getMembers());
@@ -74,10 +79,10 @@ public class LoginView {
 				
 			//remove
 			case "3" :
-				System.out.println("---회원 삭제---");
-				System.out.print("\t➜ 삭제할 아이디를 입력해주세요: ");
+				System.out.println("\n--------------회원 삭제---------------");
+				System.out.print(" ➜ 삭제할 아이디를 입력해주세요: ");
 				String deleteId = sc.next();
-				System.out.print("\t➜ 비밀번호를 입력해주세요.");
+				System.out.print(" ➜ 비밀번호를 입력해주세요: ");
 				String deletepwd = sc.next();
 				
 				try {
@@ -86,12 +91,14 @@ public class LoginView {
 							&& FileUtil.readFile(new File(filePath, fileName)).get(i).getPassword().equals(deletepwd)) {
 							int deleteNo = FileUtil.readFile(new File(filePath, fileName)).get(i).getMemberNo();
 							lm.removeMember(deleteNo);
-							System.out.println("삭제가 완료되었습니다.");
+							System.out.println("\n삭제가 완료되었습니다.");
+							break outer;
 						}
-						else {
-							System.out.println("존재하지 않는 회원입니다.");
+						else { // 아예 없는 경우
+							System.err.println("\n  ❌존재하지 않는 회원입니다.❌");
 						}
 					}
+					System.err.println("\n  ❌존재하지 않는 회원입니다.❌");
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -99,24 +106,27 @@ public class LoginView {
 				
 	            //등록된 계정 조회
             case "4" :
-                System.out.println("\n============= 등록된 회원 조회 =============");
-                System.out.print("\t➜ ID를 입력해주세요 : ");
+                System.out.println("\n---------- 등록된 회원 조회 ----------");
+                System.out.print("➜ 아이디를 입력해주세요 : ");
                 String searchId = sc.next();
                 int cnt = 0;
                 try {
                     loginCheck = FileUtil.readFile(new File(filePath, fileName));
                     if(loginCheck.isEmpty()) {
-                        System.out.println("\t등록되지 않은 회원입니다.");
+                        System.err.println("❌ 등록되지 않은 회원입니다 ❌");
+                        System.out.println("-----------------------------------");
                     } else{
                         for(int i = 0; i < loginCheck.size(); i++) {
                             if(searchId.equals(loginCheck.get(i).getId())){
-                                System.out.println("\n\t" + searchId + "님은 등록된 회원입니다.");
+                                System.out.println(searchId + "님은 등록된 회원입니다.");
+                                System.out.println("-----------------------------------");
                                 cnt++;
                                 break;
                             }
                         }
                         if(cnt==0) {
-                        	System.out.println("\t등록되지 않은 회원입니다.");                        	
+                        	System.err.println("❌ 등록되지 않은 회원입니다 ❌");      
+                        	System.out.println("-----------------------------------");
                         }
                     }
                 } catch (IOException e1) {
@@ -125,11 +135,11 @@ public class LoginView {
                 break;
 				
 			case "9" : return 0;
-			default : System.err.println("❗️️선택지에 있는 번호만 입력해주세요❗️"); continue;
+			default : System.err.println("    ❗️선택지에 있는 번호만 입력해주세요❗️\n"); continue;
 				
 			}
 		}
-	}
+	} 
 	
     public Member inputInfo() {
         Member m = new Member();
@@ -137,7 +147,7 @@ public class LoginView {
         m.setName(sc.next());
         id:
         while(true) {
-            System.out.print("\t➜ ID : ");
+            System.out.print("\t➜ 아이디 : ");
             String checkId = sc.next();
             try {
                 loginCheck = FileUtil.readFile(new File(filePath, fileName));
@@ -148,8 +158,8 @@ public class LoginView {
                 else{
                     for(int i = 0; i < loginCheck.size(); i++) {
                         if(checkId.equals(loginCheck.get(i).getId())){
-                            System.out.println("\n\t" + checkId + "는 이미 등록된 ID입니다.");
-                            System.out.println("\t다른 ID를 입력해주세요.");
+                            System.err.println("\t" + checkId + "는 이미 등록된 아이디입니다.");
+                            System.err.println("\t다른 아이디를 입력해주세요.");
                             continue id;
                         } else {
                             m.setId(checkId);
@@ -163,6 +173,8 @@ public class LoginView {
         }
         System.out.print("\t➜ 비밀번호 : ");
         m.setPassword(sc.next());
+        
+        System.out.println("\n    🎉회원등록이 완료되었습니다!🎉");
         
         return m;
         

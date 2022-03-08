@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -19,6 +20,10 @@ import movie.booking.program.vo.Movie;
 import movie.booking.program.vo.Seats;
 
 public class FileUtil {
+	
+    private String filePath = "/C:/Users/jes/Desktop/UserInfo/";
+    private String fileName = "membersInfo.txt";
+    List<Member> nowId = new ArrayList<>();
 	
 	/**
 	 * 회원정보 저장 파일
@@ -190,7 +195,7 @@ public class FileUtil {
           while((data = br.readLine()) != null) {
               
               writeString = data.split(",");
-              System.out.print("\t     " +(char)(col++) + "열 ");
+              System.out.print("     " +(char)(col++) + "열 ");
 
               for(int j = 0; j < 6; j++) {
                   //writeStirng[0,1,2,3,4,5] = [◼☐☐☐☐☐]
@@ -221,7 +226,6 @@ public class FileUtil {
             int index = 1;
             
             while((data = br.readLine()) != null) {
-//                movieList.add(data.split(","));
             	str += (data + "\n");
             	if(index % 3 == 0) {
             		movieList.add(str);
@@ -235,6 +239,66 @@ public class FileUtil {
         return movieList;
         
     }
+    
+    public String setFileName(int memberNo) {
+    	
+		String name = "";
+		
+		try {
+		nowId = readFile(new File(filePath, fileName));
+		} catch (IOException e1) {
+			e1.printStackTrace();
+		}
+		
+	
+		for(int i = 0; i < nowId.size(); i++) {
+			if(nowId.get(i).getMemberNo() == memberNo) {
+				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
+				break;
+				}
+			}
+	
+		return name;
+    }
+    
+    public void finalwriteSeat(Movie selectedMovie, Seats s) {
+    	
+		try {
+			writeSeat("C:/Users/jes/Desktop/seats/",
+					"seats" + selectedMovie.getRoom() + ".txt"
+					,s.getSeats());
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+    }
+    
+    public int indexmaker(int memberNo) {
+    	int index = 1;
+    	String name = setFileName(memberNo);
+    	File f = new File(name);
+    	int i = 1;
+    	try(BufferedReader br = new BufferedReader(new FileReader(f))){
+    		String data = "";
+    		String str = "";
+            while((data = br.readLine()) != null) {
+            	str += (data + "\n");
+            	if(i % 3 == 0) {
+            		index++;
+            	}
+            	i++;
+            	
+            }
+            } catch (FileNotFoundException e) {
+            	e.printStackTrace();
+            } catch (IOException e) {
+            	e.printStackTrace();
+            }
+    	
+    	return index;
+    	
+    }
+//    public int writeIndex()
 	
 
 }

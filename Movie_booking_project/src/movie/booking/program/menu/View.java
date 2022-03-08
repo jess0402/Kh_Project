@@ -35,17 +35,18 @@ public class View {
 	private int columnChoice;
 	
 	
-	private String mainString = "\n========== 🎬Movie Booking Menu🎬 ==========\n\n"
+	private String mainString = "\n======= 🎬Movie Booking Menu🎬 =======\n\n"
 							  + "\t1. 현재 상영 영화 스케쥴 출력\n"
 							  + "\t2. 영화별 예매하기\n"
 							  + "\t3. 극장별 예매하기\n"
 							  + "\t4. 나의 예매내역\n"
-							  + "\t9. 종료\n"
-							  + "--------------------------------------------\n"
+							  + "\t9. 종료\n\n"
+							  + "=========================================\n"
 							  + "\t➜ 메뉴 선택 : ";
 	
 
 	Seats s = new Seats();
+	FileUtil fileUtil = new FileUtil();
 	
 	public void mainMenu(int memberNum) {
 
@@ -70,14 +71,16 @@ public class View {
 					manager.movieFile(memberNum);
 					manager.nowBookingPrint(memberNum);   
 					//파일에 좌석 출력
-					try {
-						
-						FileUtil.writeSeat("C:/Users/jes/Desktop/seats/",
-								"seats" + selectedMovie.getRoom() + ".txt"
-								,s.getSeats());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+//					try {
+//						
+//						FileUtil.writeSeat("C:/Users/jes/Desktop/seats/",
+//								"seats" + selectedMovie.getRoom() + ".txt"
+//								,s.getSeats());
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+					
+					fileUtil.finalwriteSeat(selectedMovie, s);
 					
 				} else {
 					manager.deleteBooking(realIndex);
@@ -98,14 +101,16 @@ public class View {
 					manager.movieFile(memberNum);
 					manager.nowBookingPrint(memberNum);
 					//파일에 좌석 출력
-					try {
-						
-						FileUtil.writeSeat("C:/Users/jes/Desktop/seats/",
-								"seats" + selectedMovie.getRoom() + ".txt"
-								,s.getSeats());
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+//					try {
+//						
+//						FileUtil.writeSeat("C:/Users/jes/Desktop/seats/",
+//								"seats" + selectedMovie.getRoom() + ".txt"
+//								,s.getSeats());
+//					} catch (IOException e) {
+//						e.printStackTrace();
+//					}
+					
+					fileUtil.finalwriteSeat(selectedMovie, s);
 					
 				} else {
 					manager.deleteBooking(realIndex);
@@ -114,7 +119,7 @@ public class View {
 				break;
 
 			case "4" : 
-				if(manager.myBooking(myBookingMenu(), memberNum, s)) {
+				if(manager.myBooking(myBookingMenu(), memberNum, s, selectedMovie)) {
 					break;
 				}
 				//삭제했을 때 realIndex--; 되어야 함!!
@@ -127,7 +132,7 @@ public class View {
 				int answer = JOptionPane.showConfirmDialog(null, "종료하시겠습니까?", "confirm",JOptionPane.YES_NO_OPTION );
 				if(answer == JOptionPane.YES_OPTION){
 					//사용자가 yes를 눌렀을 떄
-					System.out.println("--------이용해주셔서 감사합니다.--------");
+					System.out.println("이용해주셔서 감사합니다.");
 					return;
 				} else{
 					//사용자가 Yes 외 값 입력시
@@ -151,13 +156,13 @@ public class View {
 	//영화선택
 	public String movieMenu() {
 		
-		String movieString = "\n============== 📽 Movie List ===============\n\n"
+		String movieString = "\n------------ 📽 Movie List ------------\n\n"
 						   + "\t1. 더 배트맨\n"
 						   + "\t2. 나이트메어 앨리\n"
 						   + "\t3. 나이트 레이더스\n"
 						   + "\t4. 안터벨룸\n"
 						   + "\t0. 뒤로가기\n\n"
-						   + "--------------------------------------------\n"
+						   + "----------------------------------------\n"
 						   + "\t➜ 영화 선택 : ";
 		System.out.print(movieString);
 		choiceMovie = sc.next();
@@ -168,13 +173,19 @@ public class View {
 	//극장선택
 	public String theaterMenu() {
 		
-		String theaterString = "\n============== 📽 Theater List =============\n\n"
-						     + "\t1. 용산점\n"
-						     + "\t2. 홍대점\n"
-						     + "\t3. 강남점\n"
-						     + "\t0. 뒤로가기\n\n"
-						     + "--------------------------------------------\n"
-						     + "\t➜ 극장 선택 : ";
+//		String theaterString = "\n============== 📽 Theater List =============\n\n"
+//						     + "\t1. 용산점\n"
+//						     + "\t2. 홍대점\n"
+//						     + "\t3. 강남점\n"
+//						     + "\t0. 뒤로가기\n\n"
+//						     + "--------------------------------------------\n"
+//						     + "\t➜ 극장 선택 : ";
+		
+		String theaterString = "\n----------- 📽 Theater List --------------\n"
+							 + " 1. 용산점   2. 홍대점   3. 강남점   0. 뒤로가기 \n " 
+							 + "-----------------------------------------\n"
+							 + "\t➜ 극장 선택 : ";
+		
 		System.out.print(theaterString);
 		choiceTheater = sc.next();
 		System.out.println();
@@ -183,12 +194,12 @@ public class View {
 
 
 	//좌석선택
-	public void seatsMenu(Seats s,Movie movie) {
+	public void seatsMenu(Seats s, Movie movie) {
 		
 		while(true) {
 			//좌석 출력
-			System.out.println("============================================\n");
-			System.out.println("\t\t 1 2 3 4 5 6");
+			System.out.println("==================================");
+			System.out.println("\t 1 2 3 4 5 6");
 			try {
 				File file = new File("C:/Users/jes/Desktop/seats/",
 						"seats" + movie.getRoom() + ".txt");
@@ -199,12 +210,12 @@ public class View {
 				e.printStackTrace();
 			}
 			
-			System.out.println("--------------------------------------------");
-			System.out.println("\t    ✔좌석 선택");
+			System.out.println("==================================\n");
+			System.out.println("  ✔좌석 선택✔");
 			
 			
 			while(true) {
-				System.out.print("\t➜ 행을 선택해주세요 (A~F) : ");
+				System.out.print("➜ 열을 선택해주세요 (A~F) : ");
 				try {
 					rowChoice = sc.next().charAt(0);
 					if(rowChoice < 'A' || rowChoice >'F')
@@ -218,7 +229,7 @@ public class View {
 			}
 			
 			while(true) {
-				System.out.print("\t➜ 열을 선택해주세요 (1~6) : ");
+				System.out.print("➜ 좌석을 선택해주세요 (1~6) : ");
 				try {
 					tempColumn = sc.next();
 					if(Integer.parseInt(tempColumn) < 1 || Integer.parseInt(tempColumn) > 6)
@@ -239,15 +250,9 @@ public class View {
 				System.out.println();
 			} 
 			else {
-				System.out.println("\t" + selectSeat + "으로 선택하셨습니다.");
+				System.out.print("✅" + selectSeat + "으로 선택하셨습니다.");
 				System.out.println();
 				s.getSeats()[rowChoice - 65][columnChoice - 1] = "◼︎";
-				for(int i = 0; i < 6; i++) {
-					for(int j = 0; j < 6; j++) {
-						System.out.print(s.getSeats()[i][j]);
-					}
-					System.out.println();
-				}
 				manager.takenSeat(selectSeat);
 				break;
 			}
@@ -259,15 +264,16 @@ public class View {
 	// 최종확인
 	   public boolean checking() {
 		   while(true) {
-			   System.out.print("\t➜ 예매 하시겠습니까 ? (y/n) : ");
+			   System.out.print("\n➜ 예매 하시겠습니까 ? (y/n) : ");
 			   char yn = sc.next().charAt(0);
 			   if(yn == 'y') {
-				   System.out.print("********************************************\n"
-						   + "\n\t🎉🎉 예매가 정상처리되었습니다!! 🎊🎊\n\n");
+				   System.out.print("\n* * * * * * * * * * * * * * * * * *\n"
+						   + " 🎉🎉 예매가 정상처리되었습니다!! 🎉🎉 \n"
+						   + "* * * * * * * * * * * * * * * * * *\n");
 				   realIndex++;
 				   return true;
 			   } else if(yn == 'n') {
-				   System.err.println("\tn을 선택하셨습니다. 예매에 실패했습니다.");
+				   System.err.println("n을 선택하셨습니다. 예매에 실패했습니다.\n");
 				   return false;
 			   } else {
 				   System.err.println("잘못 입력하셨습니다. y/n중 입력해주세요.");
@@ -277,12 +283,12 @@ public class View {
 	
 	public String myBookingMenu() {
 		
-		String myBookingString = "\n=================== Menu ===================\n\n"
-								+ "\t1. 나의 예매 내역 확인\n"
-								+ "\t2. 예매 내역 취소\n"
-								+ "\t0. 뒤로가기\n"
+		String myBookingString = "\n-------------- 나의 예매 내역 --------------\n"
+								+ "\t  1. 나의 예매 내역 확인\n"
+								+ "\t  2. 예매 내역 취소\n"
+								+ "\t  0. 뒤로가기\n"
 								+ "--------------------------------------------\n"
-								+ "\t➜ 메뉴 선택 : ";
+								+ "\t  ➜ 메뉴 선택 : ";
 		
 		System.out.print(myBookingString);
 		choiceMyBooking = sc.next();
