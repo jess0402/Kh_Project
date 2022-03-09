@@ -40,9 +40,7 @@ public class MovieManager {
 	private List<Movie> completeMovieList = new ArrayList<>(); 
     private int movieIndex = 0;
     private int seatIndex = 0;
-    
-    private String filePath = "/C:/Users/jes/Desktop/UserInfo/";
-    private String fileName = "membersInfo.txt";
+
     FileUtil fileUtil = new FileUtil();
     
 	public MovieManager() {
@@ -323,26 +321,9 @@ public class MovieManager {
 	
 	// main 2, 3번 출력용
 	public void nowBookingPrint(int memberNo) {
-		String name = "";
 		String pastList = "";
 		BufferedReader br = null;
-		
-		// 기존 파일 있는지 확인
-//		try {
-//			nowId = FileUtil.readFile(new File(filePath, fileName));
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-//		
-//		
-//		for(int i = 0; i < nowId.size(); i++) {
-//			if(nowId.get(i).getMemberNo() == memberNo) {
-//				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
-//				break;
-//			}
-//		}
-//		File inFile = new File(name);
-				
+
 		File inFile = new File(fileUtil.setFileName(memberNo));
 		
 		try {
@@ -388,36 +369,13 @@ public class MovieManager {
 
 		String name = "";
 		String pastList = "";
-		
-		// 기존 파일 있는지 확인
-//		try {
-//			nowId = FileUtil.readFile(new File(filePath, fileName));
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		}
-//	
-//		for(int i = 0; i < nowId.size(); i++) {
-//			if(nowId.get(i).getMemberNo() == memberNo) {
-//				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
-//				break;
-//			}
-//		}
-//		File f = new File(name);
-		
+
 		File f = new File(fileUtil.setFileName(memberNo));
 		
 		if(f.exists()) {
-//			int index = 1;
-//			int num = 0;
 			try(BufferedReader br = new BufferedReader(new FileReader(f));) {
 				String data = null;
 				while((data = br.readLine()) != null) {
-					
-//					if(num%3 == 0) {
-//						pastList += (index++ + ". 🎞" + data + "\n");
-//						num++;
-//						continue;
-//					}
 					pastList += (data + "\n");
 				}
 			} catch (IOException e) {
@@ -429,9 +387,6 @@ public class MovieManager {
 				int i = completeMovieList.size() - 1;
 				String nowList = (Integer.toString(i+1) + ". " + completeMovieList.get(i) 
 								  + "\n좌석: " + selectSeat.get(i) + "\n");
-				
-//				String nowList = (index + ". " + "🎞" + completeMovieList.get(i) 
-//				  + "\n좌석: " + selectSeat.get(i) + "\n");
 
 				bw.write(nowList);	
 
@@ -445,13 +400,11 @@ public class MovieManager {
 			try(BufferedWriter bw = new BufferedWriter(new FileWriter(f));) {
 
 				String nowList = "";
-				for(int i = 0; i < completeMovieList.size(); i++) {		
-//					String temp = ("🎞" + completeMovieList.get(i) 
-//					+ "\n좌석: " + selectSeat.get(i) + "\n");
-					
+				for(int i = 0; i < completeMovieList.size(); i++) {	
 					String temp = (i+1 + ". " + completeMovieList.get(i) 
 					+ "\n좌석: " + selectSeat.get(i) + "\n");
 					
+					// for문이 계속 돌 때 앞에서 썼던 코드들은 저장되지 않도록 하기 위해
 					if(nowList.contains(temp))
 						continue;
 					else
@@ -470,30 +423,6 @@ public class MovieManager {
 	 * main 4. 나의 예매내역
 	 */
 	public boolean myBooking(String choiceMyBooking, int memberNo, Seats s, Movie movie) {
-		BufferedReader br = null;
-//		BufferedWriter bw = null;	
-		FileReader fr = null;
-		FileWriter fw = null;
-		
-		int index = 0;
-		String name = "";
-		String pastList = "";
-		
-		// 예매 내역 불러오기
-//		try {
-//			nowId = FileUtil.readFile(new File(filePath, fileName));
-//		} catch (IOException e1) {
-//			e1.printStackTrace();
-//		} 
-//
-//		for(int i = 0; i < nowId.size(); i++) {
-//			if(nowId.get(i).getMemberNo() == memberNo) {
-//				index = i;
-//				name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
-//				break;
-//			}
-//		}
-//		File f = new File(name);
 		
 		File f = new File(fileUtil.setFileName(memberNo));
 		
@@ -513,20 +442,6 @@ public class MovieManager {
 				return true; 
 				
 			case "2":
-				// 기존 파일 있는지 확인
-//				try {
-//					nowId = FileUtil.readFile(new File(filePath, fileName));
-//				} catch (IOException e1) {
-//					e1.printStackTrace();
-//				}
-//				//파일 내 예매 내역 확인
-//				for(int i = 0; i < nowId.size(); i++) {
-//					if(nowId.get(i).getMemberNo() == memberNo) {
-//						name = ("C:/Users/jes/Desktop/MovieInfo/" + nowId.get(i).getId() + "_movieList.txt");
-//						break;
-//					}
-//				}
-//				File f2 = new File(name);
 				
 				File f2 = new File(fileUtil.setFileName(memberNo));
 				
@@ -573,9 +488,6 @@ public class MovieManager {
 						}
 					}
 					//삭제 진행
-					//movie List에서삭제
-//					Movie deleteMovie = completeMovieList.get(choiceRemove-1);
-                    //selectSeat 0 - A1.charAt(0) = 'A'
 					char rowSeat = selectSeat.get(choiceRemove-1).charAt(0); 
                     
                     int colSeat = Character.getNumericValue(selectSeat.get(choiceRemove-1).charAt(1));

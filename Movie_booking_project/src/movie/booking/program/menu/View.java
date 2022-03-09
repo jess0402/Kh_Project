@@ -69,17 +69,8 @@ public class View {
 
 				if(checking()) {
 					manager.movieFile(memberNum);
-					manager.nowBookingPrint(memberNum);   
+					manager.nowBookingPrint(memberNum); 
 					//파일에 좌석 출력
-//					try {
-//						
-//						FileUtil.writeSeat("C:/Users/jes/Desktop/seats/",
-//								"seats" + selectedMovie.getRoom() + ".txt"
-//								,s.getSeats());
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-					
 					fileUtil.finalwriteSeat(selectedMovie, s);
 					
 				} else {
@@ -101,15 +92,6 @@ public class View {
 					manager.movieFile(memberNum);
 					manager.nowBookingPrint(memberNum);
 					//파일에 좌석 출력
-//					try {
-//						
-//						FileUtil.writeSeat("C:/Users/jes/Desktop/seats/",
-//								"seats" + selectedMovie.getRoom() + ".txt"
-//								,s.getSeats());
-//					} catch (IOException e) {
-//						e.printStackTrace();
-//					}
-					
 					fileUtil.finalwriteSeat(selectedMovie, s);
 					
 				} else {
@@ -138,11 +120,6 @@ public class View {
 					//사용자가 Yes 외 값 입력시
 					System.out.println("종료를 취소합니다.");
 				}
-
-				// 로그아웃
-//			case "0" : 
-//				return;
-
 			default : 
 				JOptionPane.showMessageDialog(null, "선택지에 있는 번호만 입력해주세요",
 						"입력 오류", JOptionPane.WARNING_MESSAGE); 
@@ -172,14 +149,6 @@ public class View {
 	}
 	//극장선택
 	public String theaterMenu() {
-		
-//		String theaterString = "\n============== 📽 Theater List =============\n\n"
-//						     + "\t1. 용산점\n"
-//						     + "\t2. 홍대점\n"
-//						     + "\t3. 강남점\n"
-//						     + "\t0. 뒤로가기\n\n"
-//						     + "--------------------------------------------\n"
-//						     + "\t➜ 극장 선택 : ";
 		
 		String theaterString = "\n----------- 📽 Theater List --------------\n"
 							 + " 1. 용산점   2. 홍대점   3. 강남점   0. 뒤로가기 \n " 

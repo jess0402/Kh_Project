@@ -104,11 +104,6 @@ public class FileUtil {
 			
 			File outFile = new File(dir,name);
 			
-//			//파일이 존재한다면 삭제
-//			if(outFile.exists()) {
-//				outFile.delete();
-//			}
-			
 			//파일에 String값 입력
 			os = new BufferedOutputStream(new FileOutputStream(outFile));
 			for(int i = 0; i < memberList.size(); i++) {
@@ -181,7 +176,6 @@ public class FileUtil {
 	}
 	
     public static void readSeat(File file, Seats s) throws IOException{
-//      List<Member> memberList = new ArrayList<>();
       BufferedReader br = new BufferedReader(new FileReader(file));
       try {
           //파일에서 읽어온 정보를 배열에 저장
@@ -272,33 +266,6 @@ public class FileUtil {
 		}
 		
     }
-    
-    public int indexmaker(int memberNo) {
-    	int index = 1;
-    	String name = setFileName(memberNo);
-    	File f = new File(name);
-    	int i = 1;
-    	try(BufferedReader br = new BufferedReader(new FileReader(f))){
-    		String data = "";
-    		String str = "";
-            while((data = br.readLine()) != null) {
-            	str += (data + "\n");
-            	if(i % 3 == 0) {
-            		index++;
-            	}
-            	i++;
-            	
-            }
-            } catch (FileNotFoundException e) {
-            	e.printStackTrace();
-            } catch (IOException e) {
-            	e.printStackTrace();
-            }
-    	
-    	return index;
-    	
-    }
-//    public int writeIndex()
 	
 
 }
