@@ -112,7 +112,7 @@ public class View {
 
 			case "9" : 
 				int answer = JOptionPane.showConfirmDialog(null, "종료하시겠습니까?", "confirm",JOptionPane.YES_NO_OPTION );
-				if(answer == JOptionPane.YES_OPTION){
+				if(answer == JOptionPane.YES_OPTION){ // 사용자가 yes를 누르면 0을 반환. No를 누르면 1을 반환
 					//사용자가 yes를 눌렀을 떄
 					System.out.println("이용해주셔서 감사합니다.");
 					return;
@@ -170,8 +170,7 @@ public class View {
 			System.out.println("==================================");
 			System.out.println("\t 1 2 3 4 5 6");
 			try {
-				File file = new File("C:/Users/jes/Desktop/seats/",
-						"seats" + movie.getRoom() + ".txt");
+				File file = new File("C:/Users/jes/Desktop/seats/seats" + movie.getRoom() + ".txt");
 				//배열에 좌석 담기 Seats#seats
 				FileUtil.readSeat(file, s);
 				
